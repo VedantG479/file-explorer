@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Retro File Explorer</title>
+
+  <link rel="stylesheet" href="styles/common.css" />
+  <link rel="stylesheet" href="styles/explorer.css" />
+  <link rel="stylesheet" href="styles/preview.css" />
+</head>
+<body>
+  <div class="app">
+    <div class="top-bar">
+      <div class="top-left">
+        <button class="action-btn js-add-btn">
+          <span class="btn-icon plus">➕</span>
+          New File
+        </button>
+        <button class="action-btn js-delete-btn">
+          <span class="btn-icon delete">🗑️</span>
+          Delete
+        </button>
+        <button class="action-btn js-rename-btn">
+          <span class="btn-icon rename">✏️</span>
+          Rename
+        </button>
+      </div>
+
+      <div class="top-right">
+        <input class="search-input" placeholder="Search" />
+        <button class="action-btn small js-search-btn">Search</button>
+      </div>
+    </div>
+
+    <!-- Explorer -->
+    <div class="explorer">
+
+      <!-- Tree Panel -->
+      <div class="tree-panel">
+
+        <div class="tree-node">
+          <div class="tree-item">
+            <span class="tree-label selected">
+              <span class="icon folder-icon"></span>
+              <span class="name">web</span>
+            </span>
+          </div>
+
+          <div class="tree-children">
+            <div class="tree-node">
+              <div class="tree-item">
+                <span class="tree-label">
+                  <span class="icon folder-icon"></span>
+                  <span class="name">css</span>
+                </span>
+              </div>
+            </div>
+
+            <div class="tree-node last">
+              <div class="tree-item">
+                <span class="tree-label">
+                  <span class="icon file-icon"></span>
+                  <span class="name">index.html</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tree-node last">
+          <div class="tree-item">
+            <span class="tree-label">
+              <span class="icon file-icon"></span>
+              <span class="name">readme.txt</span>
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Preview Panel -->
+      <div class="preview-panel">
+        <div class="preview-header">
+          <span class="close-btn js-close-btn">✖</span>
+        </div>
+
+        <div class="preview-content">
+          <div class="preview-icon">📄</div>
+          <div class="preview-name">index.html</div>
+
+          <div class="meta">
+            <div><span>Type:</span> File</div>
+            <div><span>Extension:</span> .html</div>
+            <div><span>Created:</span> 28/06/2024</div>
+            <div><span>Modified:</span> 01/02/2026</div>
+            <div><span>Path:</span> Root / web / index.html</div>
+          </div>
+
+          <div class="preview-footer">
+            <button class="action-btn small js-copy-btn">Copy Path</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Path Bar -->
+    <div class="path-bar">
+      <span class="path-segment">Root</span> /
+      <span class="path-segment">web</span> /
+      <span class="path-segment active">index.html</span>
+    </div>
+
+  </div>
+
+</body>
+</html>

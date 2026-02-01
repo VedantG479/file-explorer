@@ -1,0 +1,126 @@
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #8f8f8f;
+}
+
+/* Top Bar */
+.top-bar {
+  height: 36px;
+  background: #efefef;
+  border-bottom: 1px solid #b5b5b5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.top-left,
+.top-right {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Explorer */
+.explorer {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Tree */
+.tree-panel {
+  padding: 6px;
+  overflow-y: auto;
+}
+
+.tree-node {
+  position: relative;
+  padding-left: 18px;
+}
+
+.tree-node::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 7px;
+  width: 1px;
+  height: 100%;
+  background: #000;
+}
+
+.tree-node.last::before {
+  height: 11px;
+}
+
+.tree-item {
+  position: relative;
+  height: 22px;
+  display: flex;
+  align-items: center;
+}
+
+/* horizontal connector */
+.tree-item::before {
+  content: "";
+  position: absolute;
+  left: -11px;
+  top: 50%;
+  width: 11px;
+  height: 1px;
+  background: #000;
+}
+
+/* label */
+.tree-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 6px 0 4px;
+  cursor: pointer;
+}
+
+.tree-label:hover {
+  background: #e6f0ff;
+}
+
+.tree-label.selected {
+  background: #316ac5;
+  color: #fff;
+}
+
+/* Icons */
+.folder-icon::before {
+  content: "📁";
+  margin-right: 6px;
+}
+
+.file-icon::before {
+  content: "📄";
+  margin-right: 6px;
+}
+
+/* Path Bar */
+.path-bar {
+  height: 26px;
+  background: #efefef;
+  border-top: 1px solid #b5b5b5;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  font-size: 12px;
+}
+
+.path-segment {
+  cursor: pointer;
+}
+
+.path-segment:hover {
+  text-decoration: underline;
+}
+
+.path-segment.active {
+  font-weight: bold;
+}
