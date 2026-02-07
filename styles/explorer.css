@@ -74,7 +74,6 @@
   background: #000;
 }
 
-/* label */
 .tree-label {
   display: inline-flex;
   align-items: center;
@@ -82,22 +81,21 @@
   cursor: pointer;
 }
 
-.tree-label:hover {
+.tree-item:hover {
   background: #e6f0ff;
 }
 
-.tree-label.selected {
-  background: #316ac5;
+.tree-item.selected {
+  background: #4677c5;
   color: #fff;
 }
 
-/* Icons */
-.folder-icon::before {
+.folder::before {
   content: "📁";
   margin-right: 6px;
 }
 
-.file-icon::before {
+.file::before {
   content: "📄";
   margin-right: 6px;
 }
@@ -123,4 +121,24 @@
 
 .path-segment.active {
   font-weight: bold;
+}
+
+/* ===== Rename Input ===== */
+.rename-input {
+  display: none;                 
+  font-family: inherit;
+  font-size: inherit;
+  height: 18px;
+  padding: 0 2px;
+  border: 1px solid #7f7f7f;
+  outline: none;
+}
+
+.tree-label.renaming .name {
+  display: none;
+}
+
+.tree-label.renaming .rename-input {
+  display: inline-block;
+  background: #ffffff;
 }
