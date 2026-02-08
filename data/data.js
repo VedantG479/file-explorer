@@ -62,7 +62,7 @@ export function renameFile(objId, newName){
         lastName = newName.slice(lastDotIndex)
     }
 
-    if(!firstName || !firstName.trim)   firstName = '_'
+    if(!firstName || !firstName.trim())   firstName = '_'
     changePaths(matchingObject, matchingObject.path + '/' + firstName)
     matchingObject.name = firstName
     matchingObject.extension = lastName
