@@ -28,6 +28,9 @@
           <span class="btn-icon rename">✏️</span>
           Rename
         </button>
+        <button class="action-btn info-btn js-info-btn" title="Toggle Preview">
+          <span class="info-icon">i</span>
+        </button>
       </div>
 
       <div class="top-right">
@@ -36,44 +39,12 @@
       </div>
     </div>
 
-    <!-- Explorer -->
     <div class="explorer">
-
-      <!-- Tree Panel -->
-      <div class="tree-panel">
-      </div>
-
-      <!-- Preview Panel -->
-      <div class="preview-panel hidden">
-        <div class="preview-header">
-          <span class="close-btn js-close-btn">✖</span>
-        </div>
-
-        <div class="preview-content">
-          <div class="preview-icon">📄</div>
-          <div class="preview-name">index.html</div>
-
-          <div class="meta">
-            <div><span>Type:</span> File</div>
-            <div><span>Extension:</span> .html</div>
-            <div><span>Created:</span> 28/06/2024</div>
-            <div><span>Modified:</span> 01/02/2026</div>
-            <div><span>Path:</span> Root / web / index.html</div>
-          </div>
-
-          <div class="preview-footer">
-            <button class="action-btn small js-copy-btn">Copy Path</button>
-          </div>
-        </div>
-      </div>
-
+      <div class="tree-panel"></div>
+      <div class="preview-panel js-preview-panel hidden"></div>
     </div>
 
-    <!-- Path Bar -->
-    <div class="path-bar">
-      <span class="path-segment">file-explorer</span>
-    </div>
-
+    <div class="path-bar"></div>
   </div>
 <script type="module" src="scripts.js"></script>
 </body>

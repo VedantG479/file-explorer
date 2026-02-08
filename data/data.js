@@ -5,7 +5,7 @@ export let parentObj = JSON.parse(localStorage.getItem('parentObj')) || {
     id: createId(),
     name: 'file-explorer',
     children: [],
-    path: ''
+    path: '/'
 }
 
 export function createFile(newType){
@@ -16,9 +16,9 @@ export function createFile(newType){
       children: [],
       extension: '',
       parent: parentObj.id,
-      createdDate: Date.now(),
-      modifiedDate: Date.now(),
-      path: 'file-explorer'
+      createdDate: formatter.format(Date.now()),
+      modifiedDate: formatter.format(Date.now()),
+      path: '/file-explorer'
     }
     return newObj.id
 }
@@ -66,6 +66,7 @@ export function renameFile(objId, newName){
     changePaths(matchingObject, matchingObject.path + '/' + firstName)
     matchingObject.name = firstName
     matchingObject.extension = lastName
+    matchingObject.modifiedDate = formatter.format(Date.now())
     
     saveToStorage()
 } 
@@ -75,7 +76,7 @@ export function getPath(objId){
     return matchingObject.path
 }
 
-function getMatchingObject(objId, obj = parentObj){
+export function getMatchingObject(objId, obj = parentObj){
     for(const child of obj.children) {
         if(child.id == objId)  return child
 
@@ -100,3 +101,9 @@ function saveToStorage(){
     localStorage.setItem('parentObj', JSON.stringify(parentObj))
     renderTree()
 }
+
+const formatter = new Intl.DateTimeFormat('en-GB', { 
+  day: 'numeric', 
+  month: 'long', 
+  year: 'numeric' 
+})

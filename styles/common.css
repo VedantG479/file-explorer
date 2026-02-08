@@ -63,3 +63,27 @@ body {
   outline: none;
 }
 
+.info-btn {
+  padding: 0 10px;
+}
+
+.info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 14px;
+  height: 14px;
+
+  font-family: Tahoma, Verdana, Arial, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+
+  color: #003399;         
+  background: #ffffff;
+
+  border: 1px solid #003399;
+  border-radius: 50%;      
+  line-height: 1;
+}
+

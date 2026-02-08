@@ -100,6 +100,11 @@
   margin-right: 6px;
 }
 
+.parent::before{
+  content: "🖥️";
+  margin-right: 6px;
+}
+
 /* Path Bar */
 .path-bar {
   height: 26px;
