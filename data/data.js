@@ -1,38 +1,54 @@
 import { renderTree } from "../render/renderTree.js"
 
 let newObj
+export let parentObj = {
+    id: createId(),
+    children: [],
+    path: '/'
+}
 
 export function createFile(newType){
     newObj = {
       id: createId(),
       name: 'new',
       type: newType,
-      childrens: [],
+      children: [],
       extension: '',
+      parent: parentObj.id,
       createdDate: Date.now(),
       modifiedDate: Date.now(),
-      path: '/'
+      path: '/file-explorer/'
     }
     return newObj.id
 }
 
-export function addFile(addToObjId){
-    let matchingObject = getMatchingObject(addToObjId)
+export function addFile(objId){
+    let matchingObject = getMatchingObject(parentObj, objId)
     
-    if(matchingObject && matchingObject.type == 'file')   matchingObject = getParentObject(matchingObject)
+    if(matchingObject && matchingObject.type == 'file')   matchingObject = getMatchingObject(parentObj, matchingObject.parent)
 
     if(matchingObject){
-        matchingObject.childrens.push(newObj)
+        matchingObject.children.push(newObj)
         newObj.path = matchingObject.path + matchingObject.name + '/'
+        newObj.parent = matchingObject.id
     }
+    else    parentObj.children.push(newObj)
 
-    if(newObj.path == '/')  parentsList.push(newObj)
-    objectsList.push(newObj)
-    return renderTree(parentsList)
+    return renderTree(parentObj.children)
+}
+
+export function deleteFile(objId){
+    let matchingObject = getMatchingObject(parentObj, objId)
+    let parent = getMatchingObject(parentObj, matchingObject.parent)
+    
+    if(parent)  parent.children = parent.children.filter((child) => child != matchingObject)
+    else    parentObj.children = parentObj.children.filter((child) => child != matchingObject)
+
+    return renderTree(parentObj.children)
 }
 
 export function renameFile(objId, newName){
-    let matchingObject = getMatchingObject(objId)
+    let matchingObject = getMatchingObject(parentObj, objId)
     const lastDotIndex = newName.lastIndexOf('.')
     
     let firstName, lastName
@@ -45,37 +61,26 @@ export function renameFile(objId, newName){
         lastName = newName.slice(lastDotIndex)
     }
 
+    if(!firstName || !firstName.trim)   firstName = '_'
     changePaths(matchingObject, matchingObject.path + firstName + '/')
     matchingObject.name = firstName
     matchingObject.extension = lastName
     
-    console.log(parentsList)
-    return renderTree(parentsList)
+    return renderTree(parentObj.children)
 }   
 
-export let parentsList = []
-export let objectsList = []
+function getMatchingObject(obj, objId){
+    for(const child of obj.children) {
+        if(child.id == objId)  return child
 
-export function getParentObject(object){
-    let parent
-    objectsList.forEach((obj) => {
-        obj.childrens.forEach((children) => {
-            if(children === object)    parent = obj    
-        })
-    }) 
-    return parent
-}
-
-export function getMatchingObject(objId){
-    let matchingObject
-    objectsList.forEach(function(obj){
-        if(obj.id == objId)    matchingObject = obj
-    })
-    return matchingObject
+        const found = getMatchingObject(child, objId)
+        if(found)   return found
+    }
+    return null
 }
 
 function changePaths(matchingObject, newPath){
-    matchingObject.childrens.forEach((children) => {
+    matchingObject.children.forEach((children) => {
         children.path = newPath
         changePaths(children, newPath + children.name + '/')
     })

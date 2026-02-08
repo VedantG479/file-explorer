@@ -3,7 +3,7 @@ export function renderTree(objList, isChildren = false){
     if(isChildren)  innerHTML += '<div class="tree-children">'
 
     objList.forEach((parent, index) => {
-        const {id, name, type, childrens, extension} = parent
+        const {id, name, type, children, extension} = parent
         innerHTML += `<div class="tree-node ${index == objList.length - 1 ? 'last' : ''}">
                         <div class="tree-item js-tree-item-${id}" data-id="${id}">
                             <span class="tree-label">
@@ -16,7 +16,7 @@ export function renderTree(objList, isChildren = false){
                             />
                             </span>
                         </div>
-                        ${childrens.length > 0 ? renderTree(childrens, true) : ''}
+                        ${children.length > 0 ? renderTree(children, true) : ''}
                       </div>`
     })
 

@@ -1,4 +1,4 @@
-import { addFile, createFile, parentsList, renameFile } from "./data/data.js";
+import { addFile, createFile, deleteFile, parentObj, renameFile } from "./data/data.js";
 import { renderTree } from "./render/renderTree.js";
 
 const treePanel = document.querySelector('.tree-panel')
@@ -8,10 +8,14 @@ const deleteFileButton = document.querySelector('.js-delete-btn')
 const renameFileButton = document.querySelector('.js-rename-btn')
 
 let currentSelection, treeLabelGettingRenamed
-treePanel.innerHTML = renderTree(parentsList)
+treePanel.innerHTML = renderTree(parentObj.children)
 
 document.body.addEventListener('click', (e) => {
-    let treeItem = e.target.closest('.tree-item')
+    let target = e.target
+    let treeItem = target.closest('.tree-item')
+
+    //something was getting renamed - clicked outside it 
+    if(treeLabelGettingRenamed && (!treeItem || !treeItem.querySelector('.tree-label').classList.contains('renaming'))) deselectCurrentSelection()
 
     //clicked on item 
     if(treeItem){
@@ -20,25 +24,14 @@ document.body.addEventListener('click', (e) => {
 
         // - something else is getting renamed or
         // - none is getting renamed
-        if(currentSelection)    deselectCurrentSelection()
+        deselectCurrentSelection()
         selectCurrentSelection(treeItem)
     }
-    else if(e.target === addFolderButton){  //clicked on add folder button
-        e.stopPropagation()
-        addToCurrentSelection('folder')
-    }
-    else if(e.target === addFileButton){    //clicked on add file button
-        e.stopPropagation()
-        addToCurrentSelection('file')
-    }
-    else if(e.target === deleteFileButton && currentSelection){     //clicked on delete button 
-        console.log(`deleting file ${currentSelection}`)
-    }
-    else if(e.target === renameFileButton && currentSelection){     //clicked on rename button 
-        e.stopPropagation()
-        renameCurrentSelection()
-    }
-    else if(currentSelection)    deselectCurrentSelection() //clicked outside items and buttons
+    else if(target === addFolderButton) addToCurrentSelection('folder')
+    else if(target === addFileButton)   addToCurrentSelection('file')
+    else if(target === deleteFileButton)    deleteCurrentSelection()
+    else if(target === renameFileButton)    renameCurrentSelection()
+    else if(currentSelection)    deselectCurrentSelection() 
 })
 
 function addToCurrentSelection(newType){
@@ -48,31 +41,27 @@ function addToCurrentSelection(newType){
     if(currentSelection)    currObjId = currentSelection.dataset.id
     treePanel.innerHTML = addFile(currObjId)
 
-    if(currentSelection)    deselectCurrentSelection()
+    deselectCurrentSelection()
     const newItem = document.querySelector(`.js-tree-item-${newObjId}`)
     selectCurrentSelection(newItem)
     renameCurrentSelection()
 }
 
-function renameCurrentSelection(){
-    treeLabelGettingRenamed = currentSelection.querySelector('.tree-label')
-    treeLabelGettingRenamed.classList.toggle('renaming')
-
-    treeLabelGettingRenamed.addEventListener('keydown', (e) => {
-        if(e.key === 'Enter' || e.key === 'Tab' || e.key == '/')    deselectCurrentSelection() 
-    })
-
-    document.addEventListener('click', (e) => {
-        if(e.target.closest('.tree-label') == treeLabelGettingRenamed)  return
-        deselectCurrentSelection()
-    })
+function deleteCurrentSelection(){
+    if(!currentSelection)   return
+    treePanel.innerHTML = deleteFile(currentSelection.dataset.id)
+    deselectCurrentSelection()
 }
 
-function doneRename(){
-    if(!treeLabelGettingRenamed)  return
-    treePanel.innerHTML = renameFile(currentSelection.dataset.id, treeLabelGettingRenamed.querySelector('.rename-input').value)
-    treeLabelGettingRenamed.classList.toggle('renaming')
-    treeLabelGettingRenamed = null
+function renameCurrentSelection(){
+    if(!currentSelection)   return
+    treeLabelGettingRenamed = currentSelection.querySelector('.tree-label')
+    treeLabelGettingRenamed.classList.add('renaming')
+
+    treeLabelGettingRenamed.addEventListener('keydown', handleRename)
+}
+function handleRename(e){
+    if(e.key === 'Enter' || e.key === 'Tab' || e.key == '/')    deselectCurrentSelection() 
 }
 
 function selectCurrentSelection(currSelection){
@@ -88,4 +77,12 @@ function deselectCurrentSelection(){
     if(!deleteFileButton.classList.contains('disabled'))     deleteFileButton.classList.add('disabled')
     if(!renameFileButton.classList.contains('disabled'))     renameFileButton.classList.add('disabled') 
     currentSelection = null
+}
+
+function doneRename(){
+    if(!treeLabelGettingRenamed)  return
+    treeLabelGettingRenamed.removeEventListener('keydown', handleRename)
+    treePanel.innerHTML = renameFile(currentSelection.dataset.id, treeLabelGettingRenamed.querySelector('.rename-input').value)
+    treeLabelGettingRenamed.classList.remove('renaming')
+    treeLabelGettingRenamed = null
 }
