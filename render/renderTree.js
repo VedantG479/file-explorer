@@ -1,10 +1,31 @@
 import { parentObj } from "../data/data.js"
 
 const treePanel = document.querySelector('.tree-panel')
+const searchInput = document.querySelector('.search-input')
 
 export function renderTree(){
     let innerHTML = helper(parentObj.children)
     treePanel.innerHTML = innerHTML
+
+    const value = searchInput.value
+    renderTreeElements(value)
+}
+
+searchInput.addEventListener('input', (e) => {
+    const value = e.target.value
+    renderTreeElements(value)
+})
+
+function renderTreeElements(text, obj = parentObj){
+    for(const child of obj.children) {
+        let treeItem = document.querySelector(`.js-tree-item-${child.id}`)
+        let treeLabel = treeItem.querySelector('.tree-label')
+        
+        if(text && child.name.startsWith(text)) treeLabel.classList.add('search-match')
+        else if(treeLabel.classList.contains('search-match'))    treeLabel.classList.remove('search-match')
+
+        renderTreeElements(text, child)
+    }
 }
 
 function helper(objList, isChildren = false){
