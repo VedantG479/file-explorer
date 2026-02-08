@@ -1,14 +1,15 @@
-import { addFile, createFile, deleteFile, parentObj, renameFile } from "./data/data.js";
+import { addFile, createFile, deleteFile, renameFile } from "./data/data.js";
+import { renderPath } from "./render/renderPath.js";
 import { renderTree } from "./render/renderTree.js";
 
-const treePanel = document.querySelector('.tree-panel')
 const addFileButton = document.querySelector('.js-add-btn')
 const addFolderButton = document.querySelector('.js-add-folder-btn')
 const deleteFileButton = document.querySelector('.js-delete-btn')
 const renameFileButton = document.querySelector('.js-rename-btn')
 
 let currentSelection, treeLabelGettingRenamed
-treePanel.innerHTML = renderTree(parentObj.children)
+renderTree()
+renderPath(currentSelection)
 
 document.body.addEventListener('click', (e) => {
     let target = e.target
@@ -39,7 +40,7 @@ function addToCurrentSelection(newType){
     let newObjId = createFile(newType)
 
     if(currentSelection)    currObjId = currentSelection.dataset.id
-    treePanel.innerHTML = addFile(currObjId)
+    addFile(currObjId)
 
     deselectCurrentSelection()
     const newItem = document.querySelector(`.js-tree-item-${newObjId}`)
@@ -49,7 +50,7 @@ function addToCurrentSelection(newType){
 
 function deleteCurrentSelection(){
     if(!currentSelection)   return
-    treePanel.innerHTML = deleteFile(currentSelection.dataset.id)
+    deleteFile(currentSelection.dataset.id)
     deselectCurrentSelection()
 }
 
@@ -69,6 +70,7 @@ function selectCurrentSelection(currSelection){
     if(!currentSelection.classList.contains('selected'))    currentSelection.classList.add('selected')
     if(deleteFileButton.classList.contains('disabled'))     deleteFileButton.classList.remove('disabled')
     if(renameFileButton.classList.contains('disabled'))     renameFileButton.classList.remove('disabled')   
+    renderPath(currentSelection)
 }
 
 function deselectCurrentSelection(){
@@ -77,12 +79,13 @@ function deselectCurrentSelection(){
     if(!deleteFileButton.classList.contains('disabled'))     deleteFileButton.classList.add('disabled')
     if(!renameFileButton.classList.contains('disabled'))     renameFileButton.classList.add('disabled') 
     currentSelection = null
+    renderPath(currentSelection)
 }
 
 function doneRename(){
     if(!treeLabelGettingRenamed)  return
     treeLabelGettingRenamed.removeEventListener('keydown', handleRename)
-    treePanel.innerHTML = renameFile(currentSelection.dataset.id, treeLabelGettingRenamed.querySelector('.rename-input').value)
+    renameFile(currentSelection.dataset.id, treeLabelGettingRenamed.querySelector('.rename-input').value)
     treeLabelGettingRenamed.classList.remove('renaming')
     treeLabelGettingRenamed = null
 }

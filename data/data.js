@@ -1,10 +1,11 @@
 import { renderTree } from "../render/renderTree.js"
 
 let newObj
-export let parentObj = {
+export let parentObj = JSON.parse(localStorage.getItem('parentObj')) || {
     id: createId(),
+    name: 'file-explorer',
     children: [],
-    path: '/'
+    path: ''
 }
 
 export function createFile(newType){
@@ -17,38 +18,38 @@ export function createFile(newType){
       parent: parentObj.id,
       createdDate: Date.now(),
       modifiedDate: Date.now(),
-      path: '/file-explorer/'
+      path: 'file-explorer'
     }
     return newObj.id
 }
 
 export function addFile(objId){
-    let matchingObject = getMatchingObject(parentObj, objId)
+    let matchingObject = getMatchingObject(objId)
     
-    if(matchingObject && matchingObject.type == 'file')   matchingObject = getMatchingObject(parentObj, matchingObject.parent)
+    if(matchingObject && matchingObject.type == 'file')   matchingObject = getMatchingObject(matchingObject.parent)
 
     if(matchingObject){
         matchingObject.children.push(newObj)
-        newObj.path = matchingObject.path + matchingObject.name + '/'
+        newObj.path = matchingObject.path + '/' + matchingObject.name 
         newObj.parent = matchingObject.id
     }
     else    parentObj.children.push(newObj)
 
-    return renderTree(parentObj.children)
+    saveToStorage()
 }
 
 export function deleteFile(objId){
-    let matchingObject = getMatchingObject(parentObj, objId)
-    let parent = getMatchingObject(parentObj, matchingObject.parent)
+    let matchingObject = getMatchingObject(objId)
+    let parent = getMatchingObject(matchingObject.parent)
     
     if(parent)  parent.children = parent.children.filter((child) => child != matchingObject)
     else    parentObj.children = parentObj.children.filter((child) => child != matchingObject)
 
-    return renderTree(parentObj.children)
+    saveToStorage()
 }
 
 export function renameFile(objId, newName){
-    let matchingObject = getMatchingObject(parentObj, objId)
+    let matchingObject = getMatchingObject(objId)
     const lastDotIndex = newName.lastIndexOf('.')
     
     let firstName, lastName
@@ -62,18 +63,23 @@ export function renameFile(objId, newName){
     }
 
     if(!firstName || !firstName.trim)   firstName = '_'
-    changePaths(matchingObject, matchingObject.path + firstName + '/')
+    changePaths(matchingObject, matchingObject.path + '/' + firstName)
     matchingObject.name = firstName
     matchingObject.extension = lastName
     
-    return renderTree(parentObj.children)
-}   
+    saveToStorage()
+} 
 
-function getMatchingObject(obj, objId){
+export function getPath(objId){
+    let matchingObject = getMatchingObject(objId)
+    return matchingObject.path
+}
+
+function getMatchingObject(objId, obj = parentObj){
     for(const child of obj.children) {
         if(child.id == objId)  return child
 
-        const found = getMatchingObject(child, objId)
+        const found = getMatchingObject(objId, child)
         if(found)   return found
     }
     return null
@@ -82,10 +88,15 @@ function getMatchingObject(obj, objId){
 function changePaths(matchingObject, newPath){
     matchingObject.children.forEach((children) => {
         children.path = newPath
-        changePaths(children, newPath + children.name + '/')
+        changePaths(children, newPath + '/' + children.name)
     })
 }
 
 function createId(){
     return Date.now()
+}
+
+function saveToStorage(){
+    localStorage.setItem('parentObj', JSON.stringify(parentObj))
+    renderTree()
 }

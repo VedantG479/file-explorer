@@ -111,18 +111,6 @@
   font-size: 12px;
 }
 
-.path-segment {
-  cursor: pointer;
-}
-
-.path-segment:hover {
-  text-decoration: underline;
-}
-
-.path-segment.active {
-  font-weight: bold;
-}
-
 /* ===== Rename Input ===== */
 .rename-input {
   display: none;                 

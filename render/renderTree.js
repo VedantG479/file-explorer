@@ -1,4 +1,13 @@
-export function renderTree(objList, isChildren = false){
+import { parentObj } from "../data/data.js"
+
+const treePanel = document.querySelector('.tree-panel')
+
+export function renderTree(){
+    let innerHTML = helper(parentObj.children)
+    treePanel.innerHTML = innerHTML
+}
+
+function helper(objList, isChildren = false){
     let innerHTML = ''
     if(isChildren)  innerHTML += '<div class="tree-children">'
 
@@ -16,7 +25,7 @@ export function renderTree(objList, isChildren = false){
                             />
                             </span>
                         </div>
-                        ${children.length > 0 ? renderTree(children, true) : ''}
+                        ${children.length > 0 ? helper(children, true) : ''}
                       </div>`
     })
 
